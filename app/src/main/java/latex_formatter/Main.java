@@ -1,16 +1,19 @@
 package latex_formatter;
 
+import latex_formatter.processor.Processor;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        OutputStreamWriter stream = new OutputStreamWriter(System.out, StandardCharsets.UTF_8);
         JFrame jFrame = new JFrame("Latex Formatter");
         try {
             String path = "/lf_icon.png";
@@ -31,10 +34,15 @@ public class Main {
         }
         try {
             Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
+            List<String> lines = new ArrayList<>();
+            OutputStreamWriter stream = new OutputStreamWriter(System.out, StandardCharsets.UTF_8);
             while (scanner.hasNext()) {
-                stream.write(scanner.nextLine() + (scanner.hasNext() ? "\n" : ""));
+                lines.add(scanner.nextLine());
             }
-            stream.write("プギャー");
+            List<String> outputs = Processor.process(lines);
+            for (int i = 0;i < outputs.size(); i++) {
+                stream.write(outputs.get(i));
+            }
             scanner.close();
             stream.close();
         } catch (IOException e) {
@@ -44,7 +52,9 @@ public class Main {
             }
             jFrame.setVisible(true);
             JOptionPane.showMessageDialog(jFrame, s);
-            System.exit(0);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        System.exit(0);
     }
 }
