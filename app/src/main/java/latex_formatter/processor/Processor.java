@@ -434,8 +434,7 @@ public class Processor {
             resultIndent = tryTextFormat(resultIndent);
             result = StructureUtils.buildText(resultIndent, ConfigManager.getInstance().getConfig().indents.indentStr);
         } catch (NullPointerException e) {
-            e.printStackTrace();
-            return input;
+            throw new RuntimeException(e);
         }
 
         if (result.isEmpty()) {

@@ -1,6 +1,8 @@
 package latex_formatter;
 
 import latex_formatter.processor.Processor;
+import latex_formatter.structure.StructureUtils;
+import org.jspecify.annotations.NonNull;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -45,15 +47,11 @@ public class Main {
             }
             scanner.close();
             stream.close();
-        } catch (IOException e) {
-            String s = "";
-            for(StackTraceElement element : e.getStackTrace()) {
-                s += element.toString() + "\n";
-            }
-            jFrame.setVisible(true);
-            JOptionPane.showMessageDialog(jFrame, s);
         } catch (Exception e) {
-            e.printStackTrace();
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(stream));
+            jFrame.setVisible(true);
+            JOptionPane.showMessageDialog(jFrame, stream.toString(StandardCharsets.UTF_8));
         }
         System.exit(0);
     }

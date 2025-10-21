@@ -3,6 +3,7 @@ package latex_formatter.structure;
 import latex_formatter.config.ConfigManager;
 import org.jspecify.annotations.NonNull;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -248,13 +249,17 @@ public class StructureUtils {
         List<String> result = new ArrayList<>();
         String[] endRegexList = ConfigManager.getInstance().getConfig().lineBreaks.footRegex;
         String[] beginRegexList = ConfigManager.getInstance().getConfig().lineBreaks.headRegex;
+        final boolean atTrueLength = ConfigManager.getInstance().getConfig().lineBreaks.wrapAtTrueLength;
         String tempText = rawText;
         label:
-        while (tempText.length() > wrapSize + margin) {
+        while (StructureUtils.strLength(tempText, atTrueLength) > wrapSize + margin) {
             int baseSize = wrapSize;
             while (baseSize > 1) {
-                Pair<String, String> pairB = StructureUtils.split(tempText, baseSize);
-                Pair<String, String> pairE = StructureUtils.split(tempText, baseSize - 1);
+                Pair<String, String> pairB = StructureUtils.splitAt(tempText, baseSize, atTrueLength);
+                Pair<String, String> pairE = StructureUtils.splitAt(tempText, baseSize - 1, atTrueLength);
+                if (pairE.getFirst().equals(pairB.getFirst())) {
+                    pairE = StructureUtils.splitAt(tempText, baseSize - 2, atTrueLength);
+                }
                 for (String regex : endRegexList) {
                     if (pairE.getSecond().startsWith(regex)) {
                         Pair<String, String> split = StructureUtils.split(pairE.getSecond(), regex);
@@ -311,5 +316,34 @@ public class StructureUtils {
             }
         }
         return tempResult;
+    }
+
+    public static int getTrueLength(@NonNull String string) {
+        int all = 0;
+        for (int i = 0; i < string.length(); i++) {
+            all += ConfigManager.getInstance().getConfig().lineBreaks.getTrueLength(String.valueOf(string.charAt(i)).getBytes(StandardCharsets.UTF_8).length);
+        }
+        return all;
+    }
+
+    @NonNull
+    public static Pair<String, String> splitTrueLength(@NonNull String rawText, int firstSize) {
+        int size = firstSize;
+        while (size > 1) {
+            Pair<String, String> pair = StructureUtils.split(rawText, size);
+            if (StructureUtils.getTrueLength(pair.getFirst()) <= firstSize) {
+                return pair;
+            }
+            size--;
+        }
+        return StructureUtils.split(rawText, size);
+    }
+
+    public static int strLength(String value, boolean trueLength) {
+        return trueLength ? getTrueLength(value) : value.length();
+    }
+
+    public static Pair<String, String> splitAt(String value, int firstSize, boolean trueLength) {
+        return trueLength ? splitTrueLength(value, Math.min(firstSize, value.length())) : split(value, firstSize);
     }
 }

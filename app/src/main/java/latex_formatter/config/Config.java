@@ -1,5 +1,7 @@
 package latex_formatter.config;
 
+import latex_formatter.structure.Pair;
+
 public class Config {
     public LineBreaks lineBreaks = new LineBreaks();
     public Indents indents = new Indents();
@@ -13,13 +15,24 @@ public class Config {
         public boolean keepOriginalSpaces = false;
         public boolean allowWrapComment = true;
         public boolean formatAfterWrap = true;
-        public boolean wrapAtTrueLength = true;
         public String[] lineBreakDeniedHeadRegex = new String[] {"\\", "%"};
         public String[] footRegex = new String[]
                 {"\\\\", ") ", ",", "\" ", "\".", "\",", "' ", "'.", "',", ":", ",", ".", ";", ">", "~", "!", "@", " ",
                         "#", "$", "%", "^", "&", "]", "}", "?", "!", "、", "。", "，", "．", "」", "】", "』", "）", "！", "？", "て", "に",
                         "を", "は", "が", "の", "と", "も", "へ", "で", "や"};
         public String[] headRegex = new String[] {"/", " (", " \"", " '", "-", "=", "+", "*", "`", "「", "【", "『", "（"};
+        public boolean wrapAtTrueLength = true;
+        @SuppressWarnings("unchecked")
+        public Pair<Integer, Integer>[] byteToTrueLength = new Pair[] {new Pair<>(1, 1), new Pair<>(2, 1), new Pair<>(3, 2), new Pair<>(4, 2)};
+
+        public int getTrueLength(int byteLength) {
+            for (Pair<Integer, Integer> pair : this.byteToTrueLength) {
+                if (pair.getFirst() == byteLength) {
+                    return pair.getSecond();
+                }
+            }
+            return 1;
+        }
     }
 
     public static class BlockSearcher {
