@@ -6,6 +6,7 @@ public class Config {
     public LineBreaks lineBreaks = new LineBreaks();
     public Indents indents = new Indents();
     public BlockSearcher searcher = new BlockSearcher();
+    public double timeoutSeconds = 30.0;
 
     public static class LineBreaks {
         public boolean isEnableModifyLineBreaks = true;
@@ -48,7 +49,6 @@ public class Config {
                         new TexBlockRegexPair("\\subsubsection", "}"), new TexBlockRegexPair("\\paragraph", "}"),
                         new TexBlockRegexPair("\\subparagraph", "}")};
         //public TexBlockRegexPair[] texHalfBlockRegexFixedIndentNoEndLineBreaks = {};
-        public int maxProcess = 100000;
     }
 
     public static class Indents {

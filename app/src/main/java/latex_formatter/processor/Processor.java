@@ -39,15 +39,10 @@ public class Processor {
             Deque<IncompletedTexBlock> processingTexBlocks = new ArrayDeque<>();
             List<TexBlock> tempResults = new ArrayList<>();
             Deque<String> inputQueue = new ArrayDeque<>(input);
-            int count = 0;
 
             // Processing
             String processing = inputQueue.pollFirst();
             while (processing != null) {
-                count++;
-                if (count > ConfigManager.getInstance().getConfig().searcher.maxProcess) {
-                    break;
-                }
                 int min = Integer.MAX_VALUE;
                 Pair<Config.TexBlockRegexPair, Integer> minRegex = null;
                 for (Config.TexBlockRegexPair regexPair : regexPairs) {

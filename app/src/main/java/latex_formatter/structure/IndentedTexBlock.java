@@ -1,9 +1,7 @@
 package latex_formatter.structure;
 
-import latex_formatter.config.Config;
 import org.jspecify.annotations.NonNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class IndentedTexBlock {

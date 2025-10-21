@@ -1,8 +1,7 @@
 package latex_formatter;
 
 import latex_formatter.processor.Processor;
-import latex_formatter.structure.StructureUtils;
-import org.jspecify.annotations.NonNull;
+import latex_formatter.processor.TimerThread;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,6 +15,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        TimerThread.getInstance().start();
         JFrame jFrame = new JFrame("Latex Formatter");
         try {
             String path = "/lf_icon.png";
