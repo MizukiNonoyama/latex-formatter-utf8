@@ -9,13 +9,15 @@ public class Config {
 
     public static class LineBreaks {
         public boolean isEnableModifyLineBreaks = true;
-        public int textWrapColumns = 80;
+        public int textWrapColumns = 120;
         public boolean wrapAfterIndent = true;
         public boolean keepOriginalLineBreaks = false;
         public boolean keepOriginalSpaces = false;
-        public boolean allowWrapComment = true;
         public boolean formatAfterWrap = true;
+        public boolean allowWrapComment = true;
         public String[] lineBreakDeniedHeadRegex = new String[] {"\\", "%"};
+        public String[] wrapDeniedHeadRegex = new String[] {"%"};
+        public String[] wrapDeniedContains = new String[] {"\\url{"};
         public String[] footRegex = new String[]
                 {"\\\\", ") ", ",", "\" ", "\".", "\",", "' ", "'.", "',", ":", ",", ".", ";", ">", "~", "!", "@", " ",
                         "#", "$", "%", "^", "&", "]", "}", "?", "!", "、", "。", "，", "．", "」", "】", "』", "）", "！", "？", "て", "に",

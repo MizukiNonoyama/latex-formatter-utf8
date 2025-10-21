@@ -5,6 +5,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -225,13 +226,34 @@ public class StructureUtils {
                         result.add(s);
                     }
                 } else {
+                    List<String> wrapDeniedHeadRegex = Arrays.asList(ConfigManager.getInstance().getConfig().lineBreaks.wrapDeniedHeadRegex);
+                    String[] wrapDeniedContains = ConfigManager.getInstance().getConfig().lineBreaks.wrapDeniedContains;
                     for (String regex : ConfigManager.getInstance().getConfig().lineBreaks.lineBreakDeniedHeadRegex) {
                         if (splitWithOriginalLineBreaks[i].startsWith(regex)) {
                             // Avoid wrap
                             result.addAll(textWrap(temp, wrapSize, 0));
                             temp = "";
-                            result.add(splitWithOriginalLineBreaks[i]);
+                            boolean flag = false;
+                            for (String key : wrapDeniedContains) {
+                                if (splitWithOriginalLineBreaks[i].contains(key)) {
+                                    flag = true;
+                                }
+                            }
+                            if (wrapDeniedHeadRegex.contains(regex) || flag) {
+                                result.add(splitWithOriginalLineBreaks[i]);
+                            } else {
+                                result.addAll(textWrap(splitWithOriginalLineBreaks[i], wrapSize, 0));
+                            }
                             continue label;
+                        } else {
+                            for (String key : wrapDeniedContains) {
+                                if (splitWithOriginalLineBreaks[i].contains(key)) {
+                                    result.addAll(textWrap(temp, wrapSize, 0));
+                                    temp = "";
+                                    result.add(splitWithOriginalLineBreaks[i]);
+                                    continue label;
+                                }
+                            }
                         }
                     }
                     temp += splitWithOriginalLineBreaks[i] + (i + 1 < splitWithOriginalLineBreaks.length ? " " : "");
