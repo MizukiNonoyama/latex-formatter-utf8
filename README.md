@@ -32,4 +32,4 @@ The example of settings.json
 * [Java 21](https://www.oracle.com/java/technologies/downloads/)
 
 ### About projects embedded Dependencies
-This software includes the work([Gson](https://github.com/google/gson), [Shadow](https://github.com/GradleUp/shadow)) that is distributed in the Apache License 2.0.
+This software includes the work([Gson](https://github.com/google/gson), [Shadow](https://github.com/GradleUp/shadow)) that is distributed in the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
