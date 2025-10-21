@@ -1,7 +1,5 @@
 package latex_formatter.structure;
 
-import org.jspecify.annotations.NonNull;
-
 import java.util.List;
 
 public class IndentedTexBlock {
@@ -11,7 +9,7 @@ public class IndentedTexBlock {
     public final int objectsIndent;
     public String text;
     public final boolean needLineBreakAtHead;
-    public IndentedTexBlock(IndentedTexBlock header, IndentedTexBlock footer, @NonNull List<IndentedTexBlock> blocks, int objectsIndent) {
+    public IndentedTexBlock(IndentedTexBlock header, IndentedTexBlock footer, List<IndentedTexBlock> blocks, int objectsIndent) {
         this.startRegex = header;
         this.endRegex = footer;
         this.objects = blocks;
@@ -19,7 +17,7 @@ public class IndentedTexBlock {
         this.needLineBreakAtHead = false;
     }
 
-    public IndentedTexBlock(@NonNull String text, int objectsIndent, boolean needLineBreakAtHead) {
+    public IndentedTexBlock(String text, int objectsIndent, boolean needLineBreakAtHead) {
         this.startRegex = null;
         this.endRegex = null;
         this.objects = null;

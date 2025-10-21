@@ -1,7 +1,6 @@
 package latex_formatter.structure;
 
 import latex_formatter.config.ConfigManager;
-import org.jspecify.annotations.NonNull;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class StructureUtils {
-    public static int find(@NonNull String rawText, String regex) {
+    public static int find(String rawText, String regex) {
         if (rawText.contains(regex)) {
             String[] splits = rawText.split(Pattern.quote(regex), 2);
             return (rawText.startsWith(regex)) ? 0 : splits[0].length();
@@ -19,8 +18,7 @@ public class StructureUtils {
         return -1;
     }
 
-    @NonNull
-    public static Pair<String, String> split(@NonNull String rawText, String regex) {
+    public static Pair<String, String> split(String rawText, String regex) {
         String[] splits = rawText.split(Pattern.quote(regex), 2);
         if (splits.length == 2) {
             return new Pair<>(splits[0], splits[1]);
@@ -32,8 +30,7 @@ public class StructureUtils {
         return new Pair<>("", "");
     }
 
-    @NonNull
-    public static Pair<String, String> split(@NonNull String rawText, int firstSize) {
+    public static Pair<String, String> split(String rawText, int firstSize) {
         char[] first = new char[firstSize];
         char[] second = new char[rawText.length() - firstSize];
         rawText.getChars(firstSize, rawText.length(), second, 0);
@@ -41,8 +38,7 @@ public class StructureUtils {
         return new Pair<>(new String(first), new String(second));
     }
 
-    @NonNull
-    public static IndentedTexBlock makeIndentedTexBlock(@NonNull TexBlock texBlock, int nextIndent) {
+    public static IndentedTexBlock makeIndentedTexBlock(TexBlock texBlock, int nextIndent) {
         if (texBlock.isRawText()) {
             return new IndentedTexBlock(texBlock.getRawText(), nextIndent, texBlock.lineBreakAfterStartRegex);
         }
@@ -75,8 +71,7 @@ public class StructureUtils {
         return new IndentedTexBlock(startRegex, endRegex, objects, nextIndent);
     }
 
-    @NonNull
-    public static IndentedTexBlock makeNonIndentedTexBlock(@NonNull TexBlock texBlock) {
+    public static IndentedTexBlock makeNonIndentedTexBlock(TexBlock texBlock) {
         if (texBlock.isRawText()) {
             return new IndentedTexBlock(texBlock.getRawText(), 0, texBlock.lineBreakAfterStartRegex);
         }
@@ -107,8 +102,7 @@ public class StructureUtils {
         return new IndentedTexBlock(startRegex, endRegex, objects, 0);
     }
 
-    @NonNull
-    public static List<IndentedTexBlock> makeCombinedText(@NonNull List<IndentedTexBlock> texBlocks) {
+    public static List<IndentedTexBlock> makeCombinedText(List<IndentedTexBlock> texBlocks) {
         List<IndentedTexBlock> tempResult = new ArrayList<>();
         for (IndentedTexBlock indentedTexBlock : texBlocks) {
             if (indentedTexBlock.isRawText()) {
@@ -130,8 +124,7 @@ public class StructureUtils {
         return tempResult;
     }
 
-    @NonNull
-    public static List<IndentedTexBlock> makeFormattedText(@NonNull List<IndentedTexBlock> texBlocks,
+    public static List<IndentedTexBlock> makeFormattedText(List<IndentedTexBlock> texBlocks,
             boolean keepOriginalSpace) {
         List<IndentedTexBlock> tempResult = new ArrayList<>();
         for (IndentedTexBlock indentedTexBlock : texBlocks) {
@@ -173,8 +166,7 @@ public class StructureUtils {
         return tempResult;
     }
 
-    @NonNull
-    public static List<IndentedTexBlock> wrapText(@NonNull List<IndentedTexBlock> texBlocks,
+    public static List<IndentedTexBlock> wrapText(List<IndentedTexBlock> texBlocks,
             boolean keepOriginalLineBreak, int wrapSize, int indentBaseLength, boolean wrapAfterIndent, boolean allowWrapComment) {
         List<IndentedTexBlock> tempResult = new ArrayList<>();
         for (IndentedTexBlock indentedTexBlock : texBlocks) {
@@ -203,8 +195,7 @@ public class StructureUtils {
         return tempResult;
     }
 
-    @NonNull
-    public static List<String> textWrap(@NonNull String rawText, boolean keepOriginalLineBreak, int wrapSize, boolean allowWrapComment) {
+    public static List<String> textWrap(String rawText, boolean keepOriginalLineBreak, int wrapSize, boolean allowWrapComment) {
         List<String> result = new ArrayList<>();
         String[] splitWithOriginalLineBreaks = rawText.split("\n+");
         String temp = "";
@@ -266,8 +257,7 @@ public class StructureUtils {
         return result;
     }
 
-    @NonNull
-    public static List<String> textWrap(@NonNull String rawText, int wrapSize, int margin) {
+    public static List<String> textWrap(String rawText, int wrapSize, int margin) {
         List<String> result = new ArrayList<>();
         String[] endRegexList = ConfigManager.getInstance().getConfig().lineBreaks.footRegex;
         String[] beginRegexList = ConfigManager.getInstance().getConfig().lineBreaks.headRegex;
@@ -307,8 +297,7 @@ public class StructureUtils {
         return result;
     }
 
-    @NonNull
-    public static List<String> buildText(@NonNull List<IndentedTexBlock> texBlocks, String indent) {
+    public static List<String> buildText(List<IndentedTexBlock> texBlocks, String indent) {
         List<String> tempResult = new ArrayList<>();
         for (IndentedTexBlock indentedTexBlock : texBlocks) {
             String indents = "";
@@ -340,7 +329,7 @@ public class StructureUtils {
         return tempResult;
     }
 
-    public static int getTrueLength(@NonNull String string) {
+    public static int getTrueLength(String string) {
         int all = 0;
         for (int i = 0; i < string.length(); i++) {
             all += ConfigManager.getInstance().getConfig().lineBreaks.getTrueLength(String.valueOf(string.charAt(i)).getBytes(StandardCharsets.UTF_8).length);
@@ -348,8 +337,7 @@ public class StructureUtils {
         return all;
     }
 
-    @NonNull
-    public static Pair<String, String> splitTrueLength(@NonNull String rawText, int firstSize) {
+    public static Pair<String, String> splitTrueLength(String rawText, int firstSize) {
         int size = firstSize;
         while (size > 1) {
             Pair<String, String> pair = StructureUtils.split(rawText, size);

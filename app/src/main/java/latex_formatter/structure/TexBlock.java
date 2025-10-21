@@ -1,7 +1,6 @@
 package latex_formatter.structure;
 
 import latex_formatter.config.Config;
-import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +49,7 @@ public class TexBlock {
         return "";
     }
 
-    public boolean isEquals(@NonNull TexBlock block) {
+    public boolean isEquals(TexBlock block) {
         if (block.startRegex instanceof String && this.startRegex instanceof String) {
             if (block.endRegex instanceof String && this.endRegex instanceof String) {
                 return block.startRegex.equals(this.startRegex) && block.endRegex.equals(this.endRegex);
@@ -77,7 +76,7 @@ public class TexBlock {
         return false;
     }
 
-    public boolean isSameInteriorOf(@NonNull TexBlock texBlock) {
+    public boolean isSameInteriorOf(TexBlock texBlock) {
         if (texBlock.objects.size() == 1 && texBlock.objects.getFirst() instanceof String && this.objects.size() == 1 && this.objects.getFirst() instanceof String) {
             return texBlock.objects.getFirst().equals(this.objects.getFirst());
         }

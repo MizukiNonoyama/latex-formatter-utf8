@@ -3,13 +3,11 @@ package latex_formatter.processor;
 import latex_formatter.config.Config;
 import latex_formatter.config.ConfigManager;
 import latex_formatter.structure.*;
-import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 
 public class Processor {
-    @NonNull
-    public static List<String> process(@NonNull List<String> input) {
+    public static List<String> process(List<String> input) {
         List<String> result = new ArrayList<>();
         try {
             // PreInit
@@ -438,8 +436,7 @@ public class Processor {
         return result;
     }
 
-    @NonNull
-    public static List<IndentedTexBlock> tryIndent(@NonNull List<TexBlock> allContents) {
+    public static List<IndentedTexBlock> tryIndent(List<TexBlock> allContents) {
         List<IndentedTexBlock> tempResult = new ArrayList<>();
         for (TexBlock object : allContents) {
             if (ConfigManager.getInstance().getConfig().indents.isEnableIndentTexBlocks) {
