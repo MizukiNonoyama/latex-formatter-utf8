@@ -13,30 +13,32 @@ public class Config {
         public boolean keepOriginalSpaces = false;
         public boolean allowWrapComment = true;
         public boolean formatAfterWrap = true;
-        public String[] endRegex =
+        public boolean wrapAtTrueLength = true;
+        public String[] lineBreakDeniedHeadRegex = new String[] {"\\", "%"};
+        public String[] footRegex = new String[]
                 {"\\\\", ") ", ",", "\" ", "\".", "\",", "' ", "'.", "',", ":", ",", ".", ";", ">", "~", "!", "@", " ",
-                        "#", "$", "%", "^", "&", "]", "}", "?", "!", "、", "。", "」", "】", "』", "）", "！", "？", "て", "に",
-                        "を", "は", "が", "の", "と", "も", "へ", "で", "や", "，", "．"};
-        public String[] startRegex = {"/", " (", " \"", " '", "-", "=", "+", "*", "`", "「", "【", "『", "（"};
+                        "#", "$", "%", "^", "&", "]", "}", "?", "!", "、", "。", "，", "．", "」", "】", "』", "）", "！", "？", "て", "に",
+                        "を", "は", "が", "の", "と", "も", "へ", "で", "や"};
+        public String[] headRegex = new String[] {"/", " (", " \"", " '", "-", "=", "+", "*", "`", "「", "【", "『", "（"};
     }
 
     public static class BlockSearcher {
         public TexFullBlockPair[] texFullBlockRegex =
                 {new TexFullBlockPair(new TexBlockRegexPair("\\begin", "}"), new TexBlockRegexPair("\\end", "}"))};
-        public TexBlockRegexPair[] texHalfBlockRegex = {};
-        public TexBlockRegexPair[] texHalfBlockRegexNoEndLineBreaks = {new TexBlockRegexPair("\\item ")};
+        public TexBlockRegexPair[] texHalfBlockRegex = {new TexBlockRegexPair("\\item")};
+        //public TexBlockRegexPair[] texHalfBlockRegexNoEndLineBreaks = {};
         public TexBlockRegexPair[] texHalfBlockRegexFixedIndent =
                 {new TexBlockRegexPair("\\part", "}"), new TexBlockRegexPair("\\chapter", "}"),
                         new TexBlockRegexPair("\\section", "}"), new TexBlockRegexPair("\\subsection", "}"),
                         new TexBlockRegexPair("\\subsubsection", "}"), new TexBlockRegexPair("\\paragraph", "}"),
                         new TexBlockRegexPair("\\subparagraph", "}")};
-        public TexBlockRegexPair[] texHalfBlockRegexFixedIndentNoEndLineBreaks = {};
+        //public TexBlockRegexPair[] texHalfBlockRegexFixedIndentNoEndLineBreaks = {};
         public int maxProcess = 100000;
     }
 
     public static class Indents {
         public boolean isEnableIndentTexBlocks = true;
-        public String indentStr = "\t\t";
+        public String indentStr = "\t";
     }
 
     public static class TexFullBlockPair {

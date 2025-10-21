@@ -58,13 +58,15 @@ public class StructureUtils {
         }
         List<IndentedTexBlock> objects = new ArrayList<>();
         boolean header = texBlock.lineBreakAfterStartRegex;
+        Object lastObject = null;
         for (Object object : texBlock.objects) {
             IndentedTexBlock indentedTexBlock = new IndentedTexBlock("", nextIndent + 1, header);
             if (object instanceof TexBlock) {
                 indentedTexBlock = makeIndentedTexBlock((TexBlock) object, nextIndent + 1);
             } else if (object instanceof String) {
-                indentedTexBlock = new IndentedTexBlock((String) object, nextIndent + 1, header);
+                indentedTexBlock = new IndentedTexBlock((String) object, nextIndent + 1, header || lastObject instanceof TexBlock);
             }
+            lastObject = object;
             objects.add(indentedTexBlock);
             header = false;
         }
@@ -95,7 +97,7 @@ public class StructureUtils {
             if (object instanceof TexBlock) {
                 indentedTexBlock = makeNonIndentedTexBlock((TexBlock) object);
             } else if (object instanceof String) {
-                indentedTexBlock = new IndentedTexBlock((String) object, 0, header);
+                indentedTexBlock = new IndentedTexBlock((String) object, 0, true);
             }
             objects.add(indentedTexBlock);
             header = false;
@@ -204,46 +206,51 @@ public class StructureUtils {
         List<String> result = new ArrayList<>();
         String[] splitWithOriginalLineBreaks = rawText.split("\n+");
         String temp = "";
+        label:
         for (int i = 0; i < splitWithOriginalLineBreaks.length; i++) {
             if (keepOriginalLineBreak) {
-                result.addAll(textWrap(splitWithOriginalLineBreaks[i], wrapSize));
+                result.addAll(textWrap(splitWithOriginalLineBreaks[i], wrapSize, 0));
             } else {
-                if (splitWithOriginalLineBreaks[i].startsWith("%")) {
-                    // Avoid comment wrap
-                    result.addAll(textWrap(temp, wrapSize));
+                if (splitWithOriginalLineBreaks[i].startsWith("%") && allowWrapComment) {
+                    result.addAll(textWrap(temp, wrapSize, 0));
                     temp = "";
-                    if (allowWrapComment) {
-                        List<String> split = textWrap(splitWithOriginalLineBreaks[i], wrapSize);
-                        boolean header = true;
-                        for (String s : split) {
-                            if (!header) {
-                                s = "%" + s;
-                            }
-                            header = false;
-                            result.add(s);
+                    List<String> split = textWrap(splitWithOriginalLineBreaks[i], wrapSize - 2, 2);
+                    boolean header = true;
+                    for (String s : split) {
+                        if (!header) {
+                            s = "%" + s;
                         }
-                    } else {
-                        result.add(splitWithOriginalLineBreaks[i]);
+                        header = false;
+                        result.add(s);
                     }
                 } else {
+                    for (String regex : ConfigManager.getInstance().getConfig().lineBreaks.lineBreakDeniedHeadRegex) {
+                        if (splitWithOriginalLineBreaks[i].startsWith(regex)) {
+                            // Avoid wrap
+                            result.addAll(textWrap(temp, wrapSize, 0));
+                            temp = "";
+                            result.add(splitWithOriginalLineBreaks[i]);
+                            continue label;
+                        }
+                    }
                     temp += splitWithOriginalLineBreaks[i] + (i + 1 < splitWithOriginalLineBreaks.length ? " " : "");
+                    if (i + 1 == splitWithOriginalLineBreaks.length && !temp.isEmpty()) {
+                        result.addAll(textWrap(temp, wrapSize, 0));
+                    }
                 }
             }
-        }
-        if (!keepOriginalLineBreak && !temp.isEmpty() && !temp.startsWith("%")) {
-            result.addAll(textWrap(temp, wrapSize));
         }
         return result;
     }
 
     @NonNull
-    public static List<String> textWrap(@NonNull String rawText, int wrapSize) {
+    public static List<String> textWrap(@NonNull String rawText, int wrapSize, int margin) {
         List<String> result = new ArrayList<>();
-        String[] endRegexList = ConfigManager.getInstance().getConfig().lineBreaks.endRegex;
-        String[] beginRegexList = ConfigManager.getInstance().getConfig().lineBreaks.startRegex;
+        String[] endRegexList = ConfigManager.getInstance().getConfig().lineBreaks.footRegex;
+        String[] beginRegexList = ConfigManager.getInstance().getConfig().lineBreaks.headRegex;
         String tempText = rawText;
         label:
-        while (tempText.length() > wrapSize) {
+        while (tempText.length() > wrapSize + margin) {
             int baseSize = wrapSize;
             while (baseSize > 1) {
                 Pair<String, String> pairB = StructureUtils.split(tempText, baseSize);

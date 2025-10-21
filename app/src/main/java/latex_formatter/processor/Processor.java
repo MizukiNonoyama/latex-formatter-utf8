@@ -6,8 +6,6 @@ import latex_formatter.structure.*;
 import org.jspecify.annotations.NonNull;
 
 import java.util.*;
-import java.util.function.ToIntFunction;
-import java.util.regex.Pattern;
 
 public class Processor {
     @NonNull
@@ -16,21 +14,21 @@ public class Processor {
         try {
             // PreInit
             List<Config.TexFullBlockPair> texFullBlockPairs = Arrays.asList(ConfigManager.getInstance().getConfig().searcher.texFullBlockRegex);
-            List<Config.TexBlockRegexPair> texHalfBlockNoEndLineBreaks = Arrays.asList(ConfigManager.getInstance().getConfig().searcher.texHalfBlockRegexNoEndLineBreaks);
+            //List<Config.TexBlockRegexPair> texHalfBlockNoEndLineBreaks = Arrays.asList(ConfigManager.getInstance().getConfig().searcher.texHalfBlockRegexNoEndLineBreaks);
             List<Config.TexBlockRegexPair> texHalfBlockEndLineBreaks = Arrays.asList(ConfigManager.getInstance().getConfig().searcher.texHalfBlockRegex);
             List<Config.TexBlockRegexPair> texHalfBlockFixedIndentEndLineBreaks = Arrays.asList(ConfigManager.getInstance().getConfig().searcher.texHalfBlockRegexFixedIndent);
-            List<Config.TexBlockRegexPair> texHalfBlockFixedIndentNoEndLineBreaks = Arrays.asList(ConfigManager.getInstance().getConfig().searcher.texHalfBlockRegexFixedIndentNoEndLineBreaks);
+            //List<Config.TexBlockRegexPair> texHalfBlockFixedIndentNoEndLineBreaks = Arrays.asList(ConfigManager.getInstance().getConfig().searcher.texHalfBlockRegexFixedIndentNoEndLineBreaks);
             List<Config.TexBlockRegexPair> endLineBreaks = new ArrayList<>();
             endLineBreaks.addAll(texHalfBlockEndLineBreaks);
             endLineBreaks.addAll(texHalfBlockFixedIndentEndLineBreaks);
             List<Config.TexBlockRegexPair> fixedIndents = new ArrayList<>();
             fixedIndents.addAll(texHalfBlockFixedIndentEndLineBreaks);
-            fixedIndents.addAll(texHalfBlockFixedIndentNoEndLineBreaks);
+            //fixedIndents.addAll(texHalfBlockFixedIndentNoEndLineBreaks);
             List<Config.TexBlockRegexPair> allHalfBlocks = new ArrayList<>();
             allHalfBlocks.addAll(texHalfBlockEndLineBreaks);
-            allHalfBlocks.addAll(texHalfBlockNoEndLineBreaks);
+            //allHalfBlocks.addAll(texHalfBlockNoEndLineBreaks);
             allHalfBlocks.addAll(texHalfBlockFixedIndentEndLineBreaks);
-            allHalfBlocks.addAll(texHalfBlockFixedIndentNoEndLineBreaks);
+            //allHalfBlocks.addAll(texHalfBlockFixedIndentNoEndLineBreaks);
             List<Config.TexBlockRegexPair> regexPairs = new ArrayList<>();
             regexPairs.addAll(allHalfBlocks);
             for (Config.TexFullBlockPair pair : texFullBlockPairs) {
@@ -140,7 +138,6 @@ public class Processor {
                                     TexBlock block = processingTexBlock.getFixed();
                                     // [\begin{, '}'] || [\end{, '}']
                                     boolean isPrimary = false;
-                                    boolean isEnd = false;
                                     Config.TexFullBlockPair fullBlockPair1 = null;
                                     for (Config.TexFullBlockPair fullBlockPair : texFullBlockPairs) {
                                         if (block.isStartOf(fullBlockPair)) {
@@ -149,7 +146,6 @@ public class Processor {
                                             break;
                                         }
                                         if (block.isEndOf(fullBlockPair)) {
-                                            isEnd = true;
                                             fullBlockPair1 = fullBlockPair;
                                             break;
                                         }
@@ -159,7 +155,7 @@ public class Processor {
                                             IncompletedTexBlock incompletedTexBlock = new IncompletedTexBlock(block,
                                                     Config.TexBlockRegexPair.EMPTY, new ArrayList<>(), true);
                                             processingTexBlocks.add(incompletedTexBlock);
-                                        } else if (isEnd) {
+                                        } else {
                                             boolean isFirstAppear = true;
                                             for (IncompletedTexBlock incompletedTexBlock : processingTexBlocks) {
                                                 if (incompletedTexBlock.startRegex instanceof TexBlock &&
@@ -360,7 +356,6 @@ public class Processor {
                                     TexBlock block = processingTexBlock.getFixed();
                                     // [\begin{, '}'] || [\end{, '}']
                                     boolean isPrimary = false;
-                                    boolean isEnd = false;
                                     Config.TexFullBlockPair fullBlockPair1 = null;
                                     for (Config.TexFullBlockPair fullBlockPair : texFullBlockPairs) {
                                         if (block.isStartOf(fullBlockPair)) {
@@ -369,7 +364,6 @@ public class Processor {
                                             break;
                                         }
                                         if (block.isEndOf(fullBlockPair)) {
-                                            isEnd = true;
                                             fullBlockPair1 = fullBlockPair;
                                             break;
                                         }
@@ -379,7 +373,7 @@ public class Processor {
                                             IncompletedTexBlock incompletedTexBlock = new IncompletedTexBlock(block,
                                                     Config.TexBlockRegexPair.EMPTY, new ArrayList<>(), true);
                                             processingTexBlocks.add(incompletedTexBlock);
-                                        } else if (isEnd) {
+                                        } else {
                                             boolean isFirstAppear = true;
                                             for (IncompletedTexBlock incompletedTexBlock : processingTexBlocks) {
                                                 if (incompletedTexBlock.startRegex instanceof TexBlock &&
@@ -476,6 +470,8 @@ public class Processor {
         if (enableTextWrap) {
             allContents = StructureUtils.wrapText(allContents, keepOriginalLineBreak, wrapSize, indentSize, afterIndent, allowWrapComment);
             if (ConfigManager.getInstance().getConfig().lineBreaks.formatAfterWrap) {
+                allContents = StructureUtils.makeFormattedText(allContents, keepOriginalSpaces);
+                allContents = StructureUtils.wrapText(allContents, keepOriginalLineBreak, wrapSize, indentSize, afterIndent, allowWrapComment);
                 allContents = StructureUtils.makeFormattedText(allContents, keepOriginalSpaces);
             }
         }
