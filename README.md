@@ -1,7 +1,7 @@
 # LaTex Formatter UTF-8
 This is a java application that format latex document(.tex) written by UTF-8 (For example, if you use luaLaTex, the tex 
 document will be written by UTF-8) under the environment Visual Studio Code with [Custom Local Formatters](https://marketplace.visualstudio.com/items?itemName=jkillian.custom-local-formatters).
-You can download jar file from [Release](https://github.com/MizukiNonoyama/latex-formatter-utf8/releases/) or build yourself to use this. 
+You can build yourself to use this. The output file (latex-formatter.jar) will be generated in latex-formatter/app/build/libs.
 
 The build command below:
 ```Windows Power Shell
