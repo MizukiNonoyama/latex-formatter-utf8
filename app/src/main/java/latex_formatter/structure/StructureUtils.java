@@ -2,6 +2,8 @@ package latex_formatter.structure;
 
 import latex_formatter.config.ConfigManager;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -338,7 +340,7 @@ public class StructureUtils {
     }
 
     public static Pair<String, String> splitTrueLength(String rawText, int firstSize) {
-        int size = firstSize;
+        int size = Math.min(rawText.length(), firstSize);
         while (size > 1) {
             Pair<String, String> pair = StructureUtils.split(rawText, size);
             if (StructureUtils.getTrueLength(pair.getFirst()) <= firstSize) {
@@ -354,6 +356,6 @@ public class StructureUtils {
     }
 
     public static Pair<String, String> splitAt(String value, int firstSize, boolean trueLength) {
-        return trueLength ? splitTrueLength(value, Math.min(firstSize, value.length())) : split(value, firstSize);
+        return trueLength ? splitTrueLength(value, firstSize) : split(value, firstSize);
     }
 }

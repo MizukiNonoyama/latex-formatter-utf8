@@ -418,6 +418,7 @@ public class Processor {
                     if (!inputQueue.isEmpty()) {
                         processing += "\n" + inputQueue.pollFirst();
                     } else {
+                        tempResults.add(new TexBlock(processing));
                         processing = null;
                     }
                 }
