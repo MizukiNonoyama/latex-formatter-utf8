@@ -26,3 +26,4 @@ build
 # Ignore IntelliJ IDEA profiles
 .idea/
 app/app.iml
+app/config.json
