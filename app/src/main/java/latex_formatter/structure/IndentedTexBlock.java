@@ -9,6 +9,12 @@ public class IndentedTexBlock {
     public final int objectsIndent;
     public String text;
     public final boolean needLineBreakAtHead;
+    /** true なら、この生テキストは整形・折り返し・インデント付けをせず元のまま出力する(config の formatDeniedBlockPrefixes)。 */
+    public boolean formatDenied = false;
+    /** true なら、この生テキストは折り返さない(config の wrapDeniedBlockPrefixes)。 */
+    public boolean wrapDenied = false;
+    /** true なら、この生テキストは折り返しても "\\" の直後で必ず改行する(config の forceBreakBlockPrefixes)。 */
+    public boolean forceBreak = false;
     public IndentedTexBlock(IndentedTexBlock header, IndentedTexBlock footer, List<IndentedTexBlock> blocks, int objectsIndent) {
         this.startRegex = header;
         this.endRegex = footer;

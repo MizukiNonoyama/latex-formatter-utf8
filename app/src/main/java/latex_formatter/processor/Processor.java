@@ -319,6 +319,7 @@ public class Processor {
 
     public static List<IndentedTexBlock> tryTextFormat(List<IndentedTexBlock> allContents) {
         final boolean keepOriginalLineBreak = ConfigManager.getInstance().getConfig().lineBreaks.keepOriginalLineBreaks;
+        final boolean forceBreakLine = ConfigManager.getInstance().getConfig().lineBreaks.forceBreakLine;
         final boolean keepOriginalSpaces = ConfigManager.getInstance().getConfig().lineBreaks.keepOriginalSpaces;
         final boolean enableTextWrap = ConfigManager.getInstance().getConfig().lineBreaks.isEnableModifyLineBreaks;
         final int wrapSize = ConfigManager.getInstance().getConfig().lineBreaks.textWrapColumns;
@@ -326,12 +327,13 @@ public class Processor {
         final boolean allowWrapComment = ConfigManager.getInstance().getConfig().lineBreaks.allowWrapComment;
         final int indentSize = ConfigManager.getInstance().getConfig().indents.indentStr.length();
         allContents = StructureUtils.makeCombinedText(allContents);
+        StructureUtils.markBlockPolicies(allContents, false, false, false);
         allContents = StructureUtils.makeFormattedText(allContents, keepOriginalSpaces);
         if (enableTextWrap) {
-            allContents = StructureUtils.wrapText(allContents, keepOriginalLineBreak, wrapSize, indentSize, afterIndent, allowWrapComment);
+            allContents = StructureUtils.wrapText(allContents, keepOriginalLineBreak, forceBreakLine, wrapSize, indentSize, afterIndent, allowWrapComment);
             if (ConfigManager.getInstance().getConfig().lineBreaks.formatAfterWrap) {
                 allContents = StructureUtils.makeFormattedText(allContents, keepOriginalSpaces);
-                allContents = StructureUtils.wrapText(allContents, keepOriginalLineBreak, wrapSize, indentSize, afterIndent, allowWrapComment);
+                allContents = StructureUtils.wrapText(allContents, keepOriginalLineBreak, forceBreakLine, wrapSize, indentSize, afterIndent, allowWrapComment);
                 allContents = StructureUtils.makeFormattedText(allContents, keepOriginalSpaces);
             }
         }

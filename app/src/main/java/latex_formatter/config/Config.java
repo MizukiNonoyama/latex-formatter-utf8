@@ -13,12 +13,27 @@ public class Config {
         public int textWrapColumns = 120;
         public boolean wrapAfterIndent = true;
         public boolean keepOriginalLineBreaks = false;
+        public boolean forceBreakLine = false;
         public boolean keepOriginalSpaces = false;
         public boolean formatAfterWrap = true;
         public boolean allowWrapComment = true;
         public String[] lineBreakDeniedHeadRegex = new String[] {"\\", "%"};
         public String[] wrapDeniedHeadRegex = new String[] {"%"};
         public String[] wrapDeniedContains = new String[] {"\\url{"};
+        /**
+         * ブロック開始部分(例: "\begin{lstlisting}" や "\item")がこれらの接頭辞のどれかで始まるブロックの中身は、
+         * 空白の整形・折り返し・インデントの付け直しを一切行わず、元のまま出力する(空白は無視して前方一致)。
+         */
+        public String[] formatDeniedBlockPrefixes = new String[]
+                {"\\begin{lstlisting", "\\begin{verbatim", "\\begin{Verbatim", "\\begin{minted", "\\begin{alltt"};
+        /** 開始部分がこれらの接頭辞で始まるブロックの中身は折り返さない(空白の整形は行う)。 */
+        public String[] wrapDeniedBlockPrefixes = new String[] {};
+        /** 開始部分がこれらの接頭辞で始まるブロック(数式・表)の中身は、折り返しは許すが "\\" の直後で必ず改行する。 */
+        public String[] forceBreakBlockPrefixes = new String[]
+                {"\\begin{tabular", "\\begin{array", "\\begin{longtable", "\\begin{align", "\\begin{flalign",
+                        "\\begin{gather", "\\begin{multline", "\\begin{eqnarray", "\\begin{split", "\\begin{cases",
+                        "\\begin{matrix", "\\begin{pmatrix", "\\begin{bmatrix", "\\begin{Bmatrix", "\\begin{vmatrix",
+                        "\\begin{Vmatrix", "\\begin{smallmatrix"};
         public String[] footRegex = new String[]
                 {"\\\\", ") ", ",", "\" ", "\".", "\",", "' ", "'.", "',", ":", ",", ".", ";", ">", "~", "!", "@", " ",
                         "#", "$", "%", "^", "&", "]", "}", "?", "!", "、", "。", "，", "．", "」", "】", "』", "）", "！", "？", "て", "に",
