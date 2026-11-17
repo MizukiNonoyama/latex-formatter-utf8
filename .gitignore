@@ -27,3 +27,4 @@ build
 .idea/
 app/app.iml
 app/config.json
+config.json
